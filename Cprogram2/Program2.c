@@ -34,7 +34,5 @@ int main()
 		combinations(score);
 	}
 
-
-
 	return(0);
 }
