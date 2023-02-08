@@ -5,15 +5,38 @@
  *      Author: w170l027
  */
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
+//function that prints out all data in tabular form
+void list(double arr[12])
+{
+	printf("   Month     Sales\n");
+	printf("January    $%.2f\n", arr[0]);
+	printf("February   $%.2f\n", arr[1]);
+	printf("March      $%.2f\n", arr[2]);
+	printf("April      $%.2f\n", arr[3]);
+	printf("May        $%.2f\n", arr[4]);
+	printf("June       $%.2f\n", arr[5]);
+	printf("July       $%.2f\n", arr[6]);
+	printf("August     $%.2f\n", arr[7]);
+	printf("September  $%.2f\n", arr[8]);
+	printf("October    $%.2f\n", arr[9]);
+	printf("November   $%.2f\n", arr[10]);
+	printf("December   $%.2f", arr[11]);
+}
+
+//function that evaluates and stores stats, and then prints them
 void stats(double arr[12])
 {
+	//declares variables to be used in function
 	double max = arr[0];
 	int maxIndex;
 	double min = arr[0];
 	int minIndex;
 	double sum = 0;
 
+	//for loop used to find min, max, their index so program knows which month they are from, and sums up all data at the same time
 	for(int i = 0; i < 12; i++)
 	{
 		if(arr[i] > max)
@@ -28,9 +51,10 @@ void stats(double arr[12])
 		}
 		sum = sum + arr[i];
 	}
+	//calculates average
 	double average = sum/12.00;
-
-	//Checks which month the Min sale is for
+	printf("\n");
+	//Checks which month the Min sale is for and prints accordingly
 	if(minIndex == 0)
 		{
 			printf("Minimum Sales:   $%.2f   (January)", min);
@@ -89,7 +113,7 @@ void stats(double arr[12])
 		}
 	printf("\n");
 
-	//checks which month the max sale is fro
+	//checks which month the max sale is from and prints accordingly
 	if(maxIndex == 0)
 		{
 			printf("Maximum Sales:   $%.2f   (January)", max);
@@ -139,13 +163,15 @@ void stats(double arr[12])
 			printf("Maximum Sales:   $%.2f   (December)", max);
 		}
 	printf("\n");
-
+	//prints average sale
 	printf("Average sales:   $%.2f \n", average);
 
 }
 
+//function used to calculate and print the month average for each 6 month interval
 void movingAverage(double arr[12])
 {
+	//declare variables to be used
 	double average1;
 	double average2;
 	double average3;
@@ -153,7 +179,6 @@ void movingAverage(double arr[12])
 	double average5;
 	double average6;
 	double average7;
-
 	double sum1 = 0;
 	double sum2 = 0;
 	double sum3 = 0;
@@ -162,6 +187,7 @@ void movingAverage(double arr[12])
 	double sum6 = 0;
 	double sum7 = 0;
 
+	//each for loop calculates the moving average for a single 6 month interval
 	for(int i = 0; i < 6; i++)
 		{
 			sum1 = sum1 + arr[i];
@@ -204,6 +230,7 @@ void movingAverage(double arr[12])
 		}
 		average7 = sum7/6.00;
 
+	//data found from for loops are printed to show moving averages
 	printf("January    -   June         $%.2f \n", average1);
 	printf("February   -   July         $%.2f \n", average2);
 	printf("March      -   August       $%.2f \n", average3);
@@ -215,14 +242,17 @@ void movingAverage(double arr[12])
 
 void sortSales(double arr[12])
 {
+	//declare array of indexes, array that will contain sorted data, and temp variable x used to help with sorting
 	int indexes[12];
 	double sorted[12];
 	double x;
 
+	//for loop that copies contents from arr into sorted
 	for(int i = 0; i < 12; i++)
 	{
 		sorted[i] = arr[i];
 	}
+	//for loop to sort contents in sorted by comparing an entry with the next entry
 	for(int i = 0; i < 12; i++)
 	{
 		for(int j = i + 1; j < 12; j++)
@@ -235,6 +265,7 @@ void sortSales(double arr[12])
 			}
 		}
 	}
+	//for loop to fill indexes with a number to represent the number of the month corresponding to the same index in sorted array
 	for(int i = 0; i < 12; i++)
 	{
 		if(sorted[i] == arr[0])
@@ -286,6 +317,7 @@ void sortSales(double arr[12])
 			indexes[i] = 12;
 		}
 	}
+	//print sorted array, along with the names of the month, corresponding to each entry in indexes array
 	printf("Sales Report(Highest to Lowest): \n  Month      Sales\n");
 	for(int i = 0; i < 12; i++)
 	{
@@ -342,8 +374,32 @@ void sortSales(double arr[12])
 
 int main()
 {
-	double sales[12] = {23458.01, 40112.00, 56011.85, 37820.88, 37904.67, 60200.22, 72400.31, 56210.89, 67230.84, 68233.12, 80950.34, 95225.22};
+	//create a file and open it
+	FILE* file;
+	file = fopen("input.txt", "r");
+	
+	//check if file is opened
+	if(NULL == file)
+	{
+		printf("File can not be opened!\n");
+	}
+	
+	//declare array to be filled, iterator, and temp variable for file contents
+	int i = 0;
+	double num;
+	double sales[12];
+	
+	//loop to fill array with file contents
+	while(fscanf(file, "%lf", &num) > 0)
+	{
+		sales[i] = num;
+		i++;
+	}
+	fclose(file);
 
+	//call each function from above to print all data, print statistics of data, print moving average, and print a sorted list of all data
+	list(sales);
+	printf("\n");
 	stats(sales);
 	printf("\n");
 	movingAverage(sales);
